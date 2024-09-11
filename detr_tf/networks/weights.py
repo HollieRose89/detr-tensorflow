@@ -15,6 +15,7 @@ def load_weights(model, weights: str):
     weights are supposed to be sotred in the weight folder at the root of the repository. If weights
     does not exists, but are publicly known, the weight will be download from gcloud.
     """
+    input_shape = (None, 224, 224, 3) 
     if not os.path.exists('weights'):
         os.makedirs('weights')
     
@@ -31,6 +32,7 @@ def load_weights(model, weights: str):
                 r = requests.get(f, allow_redirects=True)
                 open(os.path.join(wdir, fname), 'wb').write(r.content)
         print("Load weights from", os.path.join(wdir, f"{weights}.ckpt"))
+        model.build(input_shape) 
         l = model.load_weights(os.path.join(wdir, f"{weights}.keras"))
         l.expect_partial()
     else:
